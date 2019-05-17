@@ -25,7 +25,7 @@ exec( open( './gyamlc/version.py' ).read())
 
 
 distutils.core.setup(
-    name                = package,
+    name                = 'gyamlc',
     version             = __version__,
     author              = __author__,
     author_email        = __email__,
@@ -33,8 +33,7 @@ distutils.core.setup(
     long_description    = long_description,
     long_description_content_type="text/markdown",
     url                 = url,
-    packages            = [ package ],
-    package_dir         = { package: package },
+    packages            = [ 'gyamlc', 'gyamlc.flask', 'gyamlc.mixins' ],
     classifiers         = [
         "Programming Language :: Python :: 2",
         "Programming Language :: Python :: 3",

@@ -20,4 +20,3 @@ from gyamlc.base import ConfigProcessor, ConfigProcessorList, ConfigFile, PathLi
 from gyamlc.database import DatabaseConfig
 from gyamlc.logger import LoggingConfig
 from gyamlc.webhost import WebHostConfig
-from gyamlc.flask.flask import FlaskConfig
