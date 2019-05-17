@@ -1,0 +1,10 @@
+description         = 'Generic YAML config'
+package             = 'gyamlc'
+url                 = 'https://github.com/pe2mbs/generic_yaml_config'
+__version__         = '0.2.6'
+__copyright__       = '(C) 2019 copyright, Marc Bertens-Nguyen'
+__author__          = 'Marc Bertens-Nguyen'
+__license__         = 'GNU GENERAL PUBLIC LICENSE, Version 2, June 1991'
+__email__           = 'm.bertens@pe2mbs.nl'
+__credits__         = [ 'Marc Bertens-Nguyen' ]
+__status__          = 'Release Candidate 1'
