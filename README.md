@@ -1,7 +1,7 @@
 saiti - Generic YAML/JSON configuration handler
 -----------------------------------------------
 
-The gyamlc package convert a YAML config file into classes. 
+The saiti package convert a YAML config file into classes. 
 
 # Concept
 The concept is simple and straightforward to use start with a class that 
@@ -53,7 +53,7 @@ the list of complex objects.
    
 An object deriving from the ConfigProcess class looks like the following
 ```python
-    from gyamlc import ConfigProcessor
+    from saiti import ConfigProcessor
     
     class MyConfigurationObject( ConfigProcessor ):
         def __init__( self, **kwargs ):
@@ -75,7 +75,7 @@ An list of complex object needs an implemetation as above as the object in
 the list. And an implementation of the ConfigListProcessor class like below.
   
 ```python
-    from gyamlc import ConfigListProcessor   
+    from saiti import ConfigListProcessor   
     
     class MyListConfigurationObject( ConfigListProcessor ):
         def __init__( self, **kwargs ):
