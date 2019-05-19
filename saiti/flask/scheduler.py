@@ -17,8 +17,11 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 import importlib
-from gyamlc import ConfigProcessor
+from saiti import ConfigProcessor
 import flask_apscheduler.auth
+
+"""This is Work-In-Progress
+"""
 
 class FlaskSchedulerJob( ConfigProcessor ):
     """
@@ -29,6 +32,8 @@ class FlaskSchedulerJob( ConfigProcessor ):
         seconds:    <int>
     """
     def __init__( self, **kwargs ):
+        """
+        """
         ConfigProcessor.__init__( self, 'job', **kwargs )
         return
 
@@ -38,6 +43,8 @@ class FlaskSchedulerJobStores( ConfigProcessor ):
         default:    'string'    = SQLAlchemyJobStore(url='sqlite://')
     """
     def __init__( self, **kwargs ):
+        """
+        """
         ConfigProcessor.__init__( self, '*', **kwargs )
         return
 
@@ -49,6 +56,8 @@ class FlaskSchedulerExecutor( ConfigProcessor ):
         max_workers:    <int>       default 20
     """
     def __init__( self, **kwargs ):
+        """
+        """
         ConfigProcessor.__init__( self, '*', **kwargs )
         return
 
@@ -58,6 +67,8 @@ class FlaskSchedulerExecutors( ConfigProcessor ):
         default:        <FlaskSchedulerExecutor>
     """
     def __init__( self, **kwargs ):
+        """
+        """
         ConfigProcessor.__init__( self, 'SCHEDULER_EXECUTORS', **kwargs )
         return
 
@@ -68,6 +79,8 @@ class FlaskSchedulerJobDefaults( ConfigProcessor ):
         max_instances   <int>   default 3
     """
     def __init__( self ):
+        """
+        """
         ConfigProcessor.__init__( self, 'SCHEDULER_JOB_DEFAULTS' )
         return
 
@@ -82,6 +95,8 @@ class FlaskSchedulerConfigMixin( object ):
         SCHEDULER_JOB_DEFAULTS
     """
     def __init__( self, **kwargs ):
+        """
+        """
         self.__SCHEDULER_API_ENABLED    =  False
         self.__SCHEDULER_API_PREFIX     = '/scheduler'
         self.__SCHEDULER_AUTH           = flask_apscheduler.auth.HTTPBasicAuth()
@@ -92,25 +107,31 @@ class FlaskSchedulerConfigMixin( object ):
         return
 
     @property
-    def SCHEDULER_API_ENABLED( self ):
+    def SCHEDULER_API_ENABLED( self ) -> bool:
+        """
+        """
         return self.__SCHEDULER_API_ENABLED
 
     @SCHEDULER_API_ENABLED.setter
-    def SCHEDULER_API_ENABLED( self, value ):
+    def SCHEDULER_API_ENABLED( self, value: bool ):
         self.__SCHEDULER_API_ENABLED = value
         return
 
     @property
-    def SCHEDULER_API_PREFIX( self ):
+    def SCHEDULER_API_PREFIX( self ) -> str:
+        """
+        """
         return self.__SCHEDULER_API_PREFIX
 
     @SCHEDULER_API_PREFIX.setter
-    def SCHEDULER_API_PREFIX( self, value ):
+    def SCHEDULER_API_PREFIX( self, value: str ):
         self.__SCHEDULER_API_PREFIX = value
         return
 
     @property
     def SCHEDULER_AUTH( self ):
+        """
+        """
         return self.__SCHEDULER_AUTH
 
     @SCHEDULER_AUTH.setter

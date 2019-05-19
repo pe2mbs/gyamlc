@@ -16,27 +16,25 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
+import os
 
-class UserPassConfigMixin( object ):
-    def __init__( self, **kwargs ):
-        self.__username = None
-        self.__password = None
-        return
 
-    @property
-    def username( self ):
-        return self.__username
+class PathList( list ):
+    """Special list object to handle a list of folder locations.
+    """
+    def append( self, folder: str ):
+        """Append the folder
 
-    @username.setter
-    def username( self, value ):
-        self.__username = value
-        return
+        :param folder:  str:    string folder
+        :returns:       None
+        """
+        if folder.startswith( '~' ):
+            folder = os.path.expanduser( folder )
 
-    @property
-    def password( self ):
-        return self.__password
+        elif folder.startswith( '.' ):
+            folder = os.path.abspath( folder )
 
-    @password.setter
-    def password( self, value ):
-        self.__password = value
-        return
+        if os.path.isdir( folder ):
+            return list.append( self, folder )
+
+        raise ValueError( "{} not a valid path".format( folder ) )

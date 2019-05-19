@@ -1,6 +1,6 @@
 import unittest
 import socket
-from gyamlc.webhost import WebHostConfig
+from saiti.webhost import WebHostConfig
 
 
 class TestStringMethods(unittest.TestCase):

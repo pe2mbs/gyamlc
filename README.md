@@ -1,5 +1,8 @@
-gyamlc - Generic YAML configuration
------------------------------------
+saiti - Generic configuration handler
+-------------------------------------
+
+saiti > hausa
+
 
 The gyamlc package convert a YAML config file into classes. 
 

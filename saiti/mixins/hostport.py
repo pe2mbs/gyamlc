@@ -37,43 +37,55 @@
 
 
 class HostPortConfigMixin( object ):
+    """Generic mixin class to handle hostname and hostport
+    """
     def __init__( self, **kwargs ):
+        """Constructor to set the default values for Hostname and Port
+        """
         self.__hostname = None
         self.__hostport = None
         return
 
     @property
-    def hostname( self ):
+    def hostname( self ) -> str:
+        """The host name or IP address
+        """
         return self.__hostname
 
     @hostname.setter
-    def hostname( self, value ):
+    def hostname( self, value: str ):
         self.__hostname = value
         return
 
     @property
-    def host( self ):
+    def host( self ) -> str:
+        """The host name or IP address
+        """
         return self.__hostname
 
     @host.setter
-    def host( self, value ):
+    def host( self, value: str ):
         self.__hostname = value
         return
 
     @property
-    def hostport( self ):
+    def hostport( self ) -> int:
+        """The host port where the service listens on or the client connects to.
+        """
         return self.__hostport
 
     @hostport.setter
-    def hostport( self, value ):
+    def hostport( self, value: int ):
         self.__hostport = value
         return
 
     @property
-    def port( self ):
+    def port( self ) -> int:
+        """The host port where the service listens on or the client connects to.
+        """
         return self.__hostport
 
     @port.setter
-    def port( self, value ):
+    def port( self, value: int ):
         self.__hostport = value
         return

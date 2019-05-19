@@ -16,26 +16,10 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-import distutils.core
-
-
-exec( open( './saiti/version.py' ).read() )
-long_description = open( "README.md", "r" ).read()
-
-distutils.core.setup(
-    name                = 'saiti',
-    version             = __version__,
-    author              = __author__,
-    author_email        = __email__,
-    description         = description,
-    long_description    = long_description,
-    long_description_content_type="text/markdown",
-    url                 = url,
-    packages            = [ 'saiti', 'saiti.flask', 'saiti.mixins' ],
-    classifiers         = [
-        "Programming Language :: Python :: 3",
-        "License :: {}".format( __license__ ),
-        "Operating System :: OS Independent",
-        'Development Status :: {}'.format( __status__ )
-    ],
-)
+from saiti.base import ConfigProcessor
+from saiti.baselist import ConfigProcessorList
+from saiti.file import YamlConfigFile, JsonConfigFile
+from saiti.pathlist import PathList
+from saiti.database import DatabaseConfig
+from saiti.logger import LoggingConfig
+from saiti.webhost import WebHostConfig

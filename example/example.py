@@ -1,8 +1,8 @@
 import socket
-from gyamlc import (ConfigFile,
-                    ConfigProcessor,
-                    PathList,
-                    LoggingConfig)
+from saiti import (ConfigFile,
+                   ConfigProcessor,
+                   PathList,
+                   LoggingConfig)
 
 class WebHostConfig( ConfigProcessor ):
     """
@@ -16,11 +16,11 @@ class WebHostConfig( ConfigProcessor ):
         return
 
     @property
-    def interface( self ):
+    def interface( self ) -> str:
         return self.__interface
 
     @interface.setter
-    def interface( self, value ):
+    def interface( self, value: str ):
         try:
             if value not in ( '0.0.0.0' ):
                 result = socket.getaddrinfo( value,
@@ -35,11 +35,11 @@ class WebHostConfig( ConfigProcessor ):
         return
 
     @property
-    def port( self ):
+    def port( self ) -> int:
         return self.__port
 
     @port.setter
-    def port( self, value ):
+    def port( self, value: int ):
         if type( value ) is int:
             self.__port = value
             return
@@ -63,36 +63,47 @@ class PathsConfig( ConfigProcessor ):
         return
 
     @property
-    def library_paths( self ):
+    def library_paths( self ) -> PathList:
         return self.__library_paths
 
     @property
-    def keyword_paths( self ):
+    def keyword_paths( self ) -> PathList:
         return self.__keyword_paths
 
     @property
-    def resource_paths( self ):
+    def resource_paths( self ) -> PathList:
         return self.__resource_paths
 
 
-class CustomConfig( ConfigFile ):
-   def __init__( self, filename, **kwargs ):
+class CustomConfig( ConfigProcessor ):
+   def __init__( self, **kwargs ):
+       ConfigProcessor.__init__( self, 'common', **kwargs )
        self.__paths     = PathsConfig( **kwargs )
        self.__debug     = False # default
        self.__web       = WebHostConfig( **kwargs )
        self.__logging   = LoggingConfig( **kwargs )
-       ConfigFile.__init__( self, filename, **kwargs )
        return
 
    @property
-   def paths( self ):
+   def paths( self ) -> PathsConfig:
        return self.__paths
 
    @property
-   def debug( self ):
+   def debug( self ) -> bool:
        return self.__debug
 
    @debug.setter
-   def debug( self, value ):
+   def debug( self, value: bool ):
        self.__debug = value
        return
+
+
+class CustonConfigFile( ConfigFile ):
+    def __init__( self, filename: str, **kwargs ):
+        ConfigFile.__init__( self, filename, **kwargs )
+        self.__common = CustomConfig( **kwargs )
+        self.getWildcardObject( CustomConfig, **kwargs )
+
+    @property
+    def common( self ) -> CustomConfig:
+        return self.__common

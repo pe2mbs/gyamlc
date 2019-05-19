@@ -16,26 +16,35 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-import distutils.core
 
+class UserPassConfigMixin( object ):
+    """Credentials for login
+    """
+    def __init__( self, **kwargs ):
+        """Constructor to set the default values for Username and Password
+        """
+        self.__username = None
+        self.__password = None
+        return
 
-exec( open( './saiti/version.py' ).read() )
-long_description = open( "README.md", "r" ).read()
+    @property
+    def username( self ) -> str:
+        """Username to use to login
+        """
+        return self.__username
 
-distutils.core.setup(
-    name                = 'saiti',
-    version             = __version__,
-    author              = __author__,
-    author_email        = __email__,
-    description         = description,
-    long_description    = long_description,
-    long_description_content_type="text/markdown",
-    url                 = url,
-    packages            = [ 'saiti', 'saiti.flask', 'saiti.mixins' ],
-    classifiers         = [
-        "Programming Language :: Python :: 3",
-        "License :: {}".format( __license__ ),
-        "Operating System :: OS Independent",
-        'Development Status :: {}'.format( __status__ )
-    ],
-)
+    @username.setter
+    def username( self, value: str ):
+        self.__username = value
+        return
+
+    @property
+    def password( self ) -> str:
+        """Password to use to login
+        """
+        return self.__password
+
+    @password.setter
+    def password( self, value: str ):
+        self.__password = value
+        return

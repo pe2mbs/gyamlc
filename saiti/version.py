@@ -16,7 +16,13 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-from gyamlc.base import ConfigProcessor, ConfigProcessorList, ConfigFile, PathList
-from gyamlc.database import DatabaseConfig
-from gyamlc.logger import LoggingConfig
-from gyamlc.webhost import WebHostConfig
+description         = 'Generic YAML/JSON configuration reader/writer'
+package             = 'saiti'
+url                 = 'https://github.com/pe2mbs/saiti'
+__version__         = '0.30.1'
+__copyright__       = '(C) 2019 copyright, Marc Bertens-Nguyen'
+__author__          = 'Marc Bertens-Nguyen'
+__license__         = 'GNU GENERAL PUBLIC LICENSE, Version 2, June 1991'
+__email__           = 'm.bertens@pe2mbs.nl'
+__credits__         = [ 'Marc Bertens-Nguyen' ]
+__status__          = 'Release Candidate 1'

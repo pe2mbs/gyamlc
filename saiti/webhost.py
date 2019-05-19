@@ -17,26 +17,28 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
 import socket
-from gyamlc import ConfigProcessor
+from saiti import ConfigProcessor
 
 
 class WebHostConfig( ConfigProcessor ):
-    """
-        interface:      <str>   default localhost
-        port:           <int>   default 7070
-    """
     def __init__( self, **kwargs ):
+        """constructor of the WebHostConfig class to set the default values
+
+        :param kwargs:      dict:   keywords for the ConfigProcessor class
+        """
         ConfigProcessor.__init__( self, 'web', **kwargs )
         self.__interface    = 'localhost'
         self.__port         = 7070
         return
 
     @property
-    def interface( self ):
+    def interface( self ) -> str:
+        """The interface address DNS or IP address
+        """
         return self.__interface
 
     @interface.setter
-    def interface( self, value ):
+    def interface( self, value: str ):
         try:
             if value not in ( '0.0.0.0' ):
                 result = socket.getaddrinfo( value,
@@ -51,11 +53,13 @@ class WebHostConfig( ConfigProcessor ):
         return
 
     @property
-    def port( self ):
+    def port( self ) -> int:
+        """The port number assosiated with the interface address
+        """
         return self.__port
 
     @port.setter
-    def port( self, value ):
+    def port( self, value: int ):
         if type( value ) is int:
             self.__port = value
             return
