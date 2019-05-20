@@ -22,6 +22,11 @@ import os
 class PathList( list ):
     """Special list object to handle a list of folder locations.
     """
+    def __init__( self, must_exists = True ):
+        self.__must_exists = must_exists
+        list.__init__( self )
+        return
+
     def append( self, folder: str ):
         """Append the folder
 
@@ -34,7 +39,7 @@ class PathList( list ):
         elif folder.startswith( '.' ):
             folder = os.path.abspath( folder )
 
-        if os.path.isdir( folder ):
+        if not self.__must_exists or os.path.isdir( folder ):
             return list.append( self, folder )
 
         raise ValueError( "{} not a valid path".format( folder ) )
