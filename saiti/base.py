@@ -25,7 +25,11 @@ class ConfigProcessor( object ):
     """
     _BREADCRUMS = []
 
-    def __init__( self, name, translators = None, throw_exception = False ):
+    def __init__( self,
+                  name,
+                  translators = None,
+                  throw_exception = False,
+                  **kwargs ):
         """Constructor of the ConfigProcessor object.
 
         :param name:            str:    Name object
@@ -70,8 +74,8 @@ class ConfigProcessor( object ):
         :param kwargs:  dict:   keyword arguments for the wildcard class
         :return:        None
         """
-        if type( value ) is ConfigProcessor:
-            self.__wildcard = True
+        if hasattr( ConfigProcessor, '_BREADCRUMS' ):
+            self.__wildcard         = True
             self.__wildcardObject   = value
             self.__wildcardKwargs   = kwargs
             return
@@ -169,7 +173,7 @@ class ConfigProcessor( object ):
             else:
                 self.__wildcardKeys.append( key )
                 var = self.__wildcardObject( key, **self.__wildcardKwargs )
-                getattr( self, key, var )
+                setattr( self, key, var )
 
             if type( value ) in ( bool, int, str, float ):
                 if type( value ) == type( var ) or var is None:
@@ -237,6 +241,18 @@ class ConfigProcessor( object ):
 
         return config
 
+    def _dump( self, key, value, indent: int, stream: object ):
+        indentStr = " " * indent
+        if isinstance( value, ( int, str, float, bool, list, tuple ) ):
+            print( "{0}{1:30} : {2}".format( indentStr, key, value ), file = stream )
+
+        elif isinstance( value, ConfigProcessor ):
+            print( "{0}{1:30} {{".format( indentStr, key ), file = stream )
+            value.dump( indent = indent + 2, stream = stream )
+            print( "{0}}}".format( indentStr ) )
+
+        return
+
     def dump( self, indent: int = 0, stream: object = sys.stdout ) -> None:
         """Dump properties of the class to the console or file stream supplied.
 
@@ -244,14 +260,8 @@ class ConfigProcessor( object ):
         :param stream:  file:   File stream (default stdout)
         :return:
         """
-        indentStr = " " * indent
-        for key, value in self.props().items():
-            if isinstance( value, ( int, str, float, bool, list, tuple ) ):
-                print( "{0}{1:30} : {2}".format( indentStr, key, value ), file = stream )
 
-            elif isinstance( value, ConfigProcessor ):
-                print( "{0}{1:30} {".format( indentStr, key ), file = stream )
-                value.dump( indent = indent + 2, stream = stream )
-                print( "{0}}}".format( indentStr ) )
+        for key, value in self.props().items():
+            self._dump( key, value, indent, stream )
 
         return

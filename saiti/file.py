@@ -7,7 +7,7 @@ import json
 class YamlConfigFile( ConfigProcessor ):
     """Main YAML file reader/writer
     """
-    def __init__( self, filename: str, **kwargs ):
+    def __init__( self, filename: str, loadLater: bool = False, **kwargs ):
         """Constructor of the YAML reader/writer class
 
         :param filename:    str:    filename of the YAML
@@ -15,7 +15,9 @@ class YamlConfigFile( ConfigProcessor ):
         """
         ConfigProcessor.__init__( self, 'file', **kwargs )
         self.__filename  = filename
-        self.Load()
+        if not loadLater:
+            self.Load()
+
         return
 
     def name( self ) -> str:
