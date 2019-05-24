@@ -5,7 +5,7 @@ from saiti import (YamlConfigFile,
                    DatabaseConfig,
                    WebHostConfig,
                    LoggingConfig)
-
+from saiti.flask import FlaskConfigMixin, FlaskSqlAlchemyConfigMixin
 
 
 class PathsConfig( ConfigProcessor ):
@@ -36,15 +36,19 @@ class PathsConfig( ConfigProcessor ):
         return self.__resource_paths
 
 
-class CustomConfig( ConfigProcessor ):
+class CustomConfig( ConfigProcessor, FlaskConfigMixin, FlaskSqlAlchemyConfigMixin ):
     def __init__( self, name = 'common', **kwargs ):
         ConfigProcessor.__init__( self, name, **kwargs )
+        FlaskConfigMixin.__init__( self, **kwargs )
         self.__paths        = PathsConfig( must_exists = False, **kwargs )
         self.__debug        = False # default
         self.__poll         = False # default
         self.__web          = WebHostConfig( **kwargs )
         self.__database     = DatabaseConfig( **kwargs )
         self.__logging      = LoggingConfig( **kwargs )
+        FlaskSqlAlchemyConfigMixin.__init__( self,
+                                             database_settings = self.database,
+                                             **kwargs )
         return
 
     @property

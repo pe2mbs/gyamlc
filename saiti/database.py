@@ -38,7 +38,7 @@ class DatabaseConfig( ConfigProcessor,
         ConfigProcessor.__init__( self, 'database', **kwargs )
         UserPassConfigMixin.__init__( self, **kwargs )
         HostPortConfigMixin.__init__( self, **kwargs )
-        self.__engines  = ( 'sqlite3',
+        self.__engines  = ( 'sqlite',
                             'postgresql',
                             'postgresql+pg8000',
                             'postgresql+psycopg2',

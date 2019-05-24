@@ -1,7 +1,17 @@
 saiti - Generic YAML/JSON configuration handler
 -----------------------------------------------
 
-The saiti package convert a YAML config file into classes. 
+The saiti package convert a YAML or JSON config file into classes.
+To be used with our application. It performs validation on parameters 
+and checks existence of parameters. The validation is to prevent 
+typos in the configuration.   
+ 
+It currently supports to follwoing external packages;
+* Flask 
+* Flask-JWT
+* Flask-JWT-Extended 
+* Flask-SQLAlchemy
+* Flask-apscheduler
 
 # Concept
 The concept is simple and straightforward to use start with a class that 
@@ -47,9 +57,9 @@ For complex properies only a getter needs to be implemented.
 
 ```
 
-The internal variable maybe a simple list with primitive variables, or an 
-object derived from the ConfigProcessor or ConfigListProcessor in case of 
-the list of complex objects.
+The internal variable maybe a simple list with primitive variables, or 
+an object derived from the ConfigProcessor or ConfigListProcessor in 
+case of the list of complex objects.
    
 An object deriving from the ConfigProcess class looks like the following
 ```python
@@ -71,8 +81,9 @@ An object deriving from the ConfigProcess class looks like the following
             return
 ```
 
-An list of complex object needs an implemetation as above as the object in 
-the list. And an implementation of the ConfigListProcessor class like below.
+An list of complex object needs an implemetation as above as the object 
+in the list. And an implementation of the ConfigListProcessor class like 
+below.
   
 ```python
     from saiti import ConfigListProcessor   
@@ -110,17 +121,11 @@ There also a number of mixins they can be found in the mixins subpackage;
 > * password
  
 # Special cases
-Whenever a configuration contains keys for configuration objects that are
-variable, therefore not predefined. 
+Whenever a configuration contains keys for configuration objects that 
+are variable, therefore not predefined. 
 
 In the derived ConfigProcessor class the variable 'wildcardObject' must 
 be set to a class derived from ConfigProcessor.
- 
-
-
-
-
-
 
 # Examples
 See the example folder

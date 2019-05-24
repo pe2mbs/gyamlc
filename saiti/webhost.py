@@ -28,7 +28,7 @@ class WebHostConfig( ConfigProcessor ):
         """
         ConfigProcessor.__init__( self, 'web', **kwargs )
         self.__interface    = 'localhost'
-        self.__port         = 7070
+        self.__port         = 8000
         return
 
     @property

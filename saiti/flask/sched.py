@@ -18,7 +18,11 @@
 #
 import importlib
 from saiti import ConfigProcessor
-import flask_apscheduler.auth
+try:
+    import flask_apscheduler.auth
+
+except:
+    pass
 
 """This is Work-In-Progress
 """

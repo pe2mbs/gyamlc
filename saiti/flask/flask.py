@@ -21,7 +21,7 @@ from datetime import timedelta
 from typing import Union
 
 
-class FlaskConfig( ConfigProcessor ):
+class FlaskConfigMixin( object ):
     """This is the FLASK configuration class
 
     """
@@ -32,7 +32,6 @@ class FlaskConfig( ConfigProcessor ):
 
         :param kwargs:  see ConfigProcessor: kwargs
         """
-        ConfigProcessor.__init__( self, 'flask', **kwargs )
         self.__testing                          = False
         self.__secret_key                       = None
         self.__env                              = 'production'
@@ -513,3 +512,7 @@ class FlaskConfig( ConfigProcessor ):
 
 
 
+class FlaskConfig( ConfigProcessor, FlaskConfigMixin ):
+    def __init__( self, **kwargs ):
+        ConfigProcessor.__init__( self, 'flask', **kwargs )
+        FlaskConfigMixin.__init__( self, **kwargs )
