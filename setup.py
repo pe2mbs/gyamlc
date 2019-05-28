@@ -45,7 +45,7 @@ setup(
     packages            = [ 'saiti', 'saiti.flask', 'saiti.mixins' ],
     python_requires     = '>=3',
     keywords            = 'config json yaml logging flask generic custom',
-    install_requires    = [ 'PyYAML==3.12' ],
+    install_requires    = [ 'pyyaml>=4.2b1' ],
     package_data        = {},
     data_files          = [ ( 'example', [ 'example/example.conf'] ) ],
     classifiers         = [
