@@ -1,5 +1,4 @@
-saiti - Generic YAML/JSON configuration handler
------------------------------------------------
+# saiti - Generic YAML/JSON configuration handler
 
 The saiti package convert a YAML or JSON config file into classes.
 To be used with our application. It performs validation on parameters 
@@ -7,18 +6,21 @@ and checks existence of parameters. The validation is to prevent
 typos in the configuration.   
  
 It currently supports to follwoing external packages;
+
 * Flask 
 * Flask-JWT
 * Flask-JWT-Extended 
 * Flask-SQLAlchemy
 * Flask-apscheduler
 
-# Concept
+## Concept
 The concept is simple and straightforward to use start with a class that 
 inherits the ConfigFile class and implement properies that are accessable
 at root file level. For primitive variable (str, int, bool and float) 
 implement both propery getter and setter.
-```python       
+
+```python
+    class MyConfigurationFileObject( ConfigYamlFile ):
         def __init__( self, **kwargs )
             self.__property_name    = default value or None
             ... 
@@ -28,7 +30,7 @@ implement both propery getter and setter.
         @property
         def property_name( self ):
             return self.__property_name
-            
+        
         @property_name.setter
         def property_name( self, value )
             self.__property_name = value
@@ -37,23 +39,24 @@ implement both propery getter and setter.
 
 For complex properies only a getter needs to be implemented.
 ```python       
-        def __init__( self, **kwargs )
-            self.__list_property_name           = []
-            self.__object_property_name         = DerivedConfigProcessor
-            self.__list_objects_property_name   = DerivedConfigProcessorList
-            ... 
+class MyConfigurationObject( ConfigProcessor ):
+    def __init__( self, **kwargs )
+        self.__list_property_name           = []
+        self.__object_property_name         = DerivedConfigProcessor
+        self.__list_objects_property_name   = DerivedConfigProcessorList
+        ... 
 
-        @property
-        def list_property_name( self ):
-            return self.__list_property_name
+    @property
+    def list_property_name( self ):
+        return self.__list_property_name
 
-        @property
-        def object_property_name( self ):
-            return self.__object_property_name
+    @property
+    def object_property_name( self ):
+        return self.__object_property_name
 
-        @property
-        def list_object_property_name( self ):
-            return self.__list_object_property_name
+    @property
+    def list_object_property_name( self ):
+        return self.__list_object_property_name
 
 ```
 
@@ -63,22 +66,22 @@ case of the list of complex objects.
    
 An object deriving from the ConfigProcess class looks like the following
 ```python
-    from saiti import ConfigProcessor
-    
-    class MyConfigurationObject( ConfigProcessor ):
-        def __init__( self, **kwargs ):
-            self.__property_name    = default value or None
-            ConfigProcessor.__init__( self, '<name>', **kwargs )
-            ... 
-            
-        @property
-        def property_name( self ):
-            return self.__property_name
-            
-        @property_name.setter
-        def property_name( self, value )
-            self.__property_name = value
-            return
+from saiti import ConfigProcessor
+
+class MyConfigurationObject( ConfigProcessor ):
+    def __init__( self, **kwargs ):
+        self.__property_name    = default value or None
+        ConfigProcessor.__init__( self, '<name>', **kwargs )
+        ... 
+        
+    @property
+    def property_name( self ):
+        return self.__property_name
+        
+    @property_name.setter
+    def property_name( self, value )
+        self.__property_name = value
+        return
 ```
 
 An list of complex object needs an implemetation as above as the object 
@@ -86,15 +89,15 @@ in the list. And an implementation of the ConfigListProcessor class like
 below.
   
 ```python
-    from saiti import ConfigListProcessor   
-    
-    class MyListConfigurationObject( ConfigListProcessor ):
-        def __init__( self, **kwargs ):
-            ConfigListProcessor.__init__( self, **kwargs )
-            return
-            
-        def newObject( self, name, obj ):
-            return MyConfigurationObject( name )
+from saiti import ConfigListProcessor   
+
+class MyListConfigurationObject( ConfigListProcessor ):
+    def __init__( self, **kwargs ):
+        ConfigListProcessor.__init__( self, **kwargs )
+        return
+        
+    def newObject( self, name, obj ):
+        return MyConfigurationObject( name )
 
 ```
 
@@ -120,13 +123,13 @@ There also a number of mixins they can be found in the mixins subpackage;
 > * username
 > * password
  
-# Special cases
+## Special cases
 Whenever a configuration contains keys for configuration objects that 
 are variable, therefore not predefined. 
 
 In the derived ConfigProcessor class the variable 'wildcardObject' must 
 be set to a class derived from ConfigProcessor.
 
-# Examples
+## Examples
 See the example folder
 

@@ -19,10 +19,19 @@
 description         = 'Generic YAML/JSON configuration reader/writer'
 package             = 'saiti'
 url                 = 'https://github.com/pe2mbs/saiti'
-__version__         = '0.31.0'
+__version__         = '0.31.5rc1'
 __copyright__       = '(C) 2019 copyright, Marc Bertens-Nguyen'
 __author__          = 'Marc Bertens-Nguyen'
-__license__         = 'GNU GENERAL PUBLIC LICENSE, Version 2, June 1991'
+__license__         = 'GNU General Public License v2 (GPLv2)'
 __email__           = 'm.bertens@pe2mbs.nl'
 __credits__         = [ 'Marc Bertens-Nguyen' ]
-__status__          = 'Release Candidate 1'
+"""
+    1 - Planning
+    2 - Pre-Alpha
+    3 - Alpha
+    4 - Beta
+    5 - Production/Stable
+    6 - Mature
+    7 - Inactive
+"""
+__status__          = '4 - Beta'
