@@ -61,10 +61,5 @@ setup(
         'Intended Audience :: Developers',
         'Intended Audience :: End Users/Desktop',
         'Natural Language :: English'
-
-
-
-
-
     ],
 )

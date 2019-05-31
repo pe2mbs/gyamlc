@@ -20,6 +20,15 @@
 import sys
 import inspect
 
+class ConfigItemLoader( object ):
+    def __init__( self ):
+        return
+
+
+
+
+
+
 class ConfigProcessor( object ):
     """The main class to process a configuration object
     """
@@ -179,6 +188,42 @@ class ConfigProcessor( object ):
                 if type( value ) == type( var ) or var is None:
                     setattr( self, key, value )
 
+                elif type( value ) is int:
+                    if callable( var ):
+                        var = value
+
+                    elif isinstance( var, object ):
+                        var = value
+
+                elif type( value ) is str and ( callable( var ) or isinstance( var, object ) ):
+                    value = value.replace( ':', '.' )
+                    module_name, cls_name = value.rsplit( '.', 1 )
+                    try:
+                        module = __import__( module_name, None, None, [ cls_name ] )
+
+                    except ImportError:
+                        # support importing modules not yet set up by the parent module
+                        # (or package for that matter)
+                        self._error( "import ERROR: key {} = {} in {}".format( key, value, self.breadCrumPath() ) )
+                        continue
+
+                    args = []
+                    kwargs = {}
+                    if cls_name.endswith( ')' ):
+                        cls_name, cls_args = cls_name.split( '(', 1 )
+
+                        def fn( *args, **kwargs ):
+                            return args, kwargs
+
+                        args, kwargs = eval( 'fn( ' + cls_args[:-1] )
+
+                    cls = getattr( module, cls_name )
+                    try:
+                        setattr( self, key, cls( *args, **kwargs ) )
+
+                    except Exception:
+                        self._error( "object instanciation ERROR: key {} = {} in {}".format( key, value, self.breadCrumPath() ) )
+
                 else:
                     self._error( "primitive ERROR: key {} = {} in {}".format( key, value, self.breadCrumPath() ) )
 
@@ -250,6 +295,16 @@ class ConfigProcessor( object ):
             print( "{0}{1:30} {{".format( indentStr, key ), file = stream )
             value.dump( indent = indent + 2, stream = stream )
             print( "{0}}}".format( indentStr ) )
+
+        elif value is not None:
+            if value in ( list, tuple ) and len( value ) > 0:
+                print( "{0}{1:30} : list >> {2}".format( indentStr, key, value ), file = stream )
+
+            elif value is dict and len( value ) > 0:
+                print( "{0}{1:30} : dict >> {2}".format( indentStr, key, value ), file = stream )
+
+            else:
+                print( "{0}{1:30} : object >> {2}".format( indentStr, key, value ), file = stream )
 
         return
 
