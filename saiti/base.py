@@ -215,14 +215,21 @@ class ConfigProcessor( object ):
                         def fn( *args, **kwargs ):
                             return args, kwargs
 
-                        args, kwargs = eval( 'fn( ' + cls_args[:-1] )
+                        try:
+                            args, kwargs = eval( 'fn( ' + cls_args[:-1] )
+
+                        except Exception as exc:
+                            self._error( "object instantiation exception {} on key {} = {} in {}".format( str( exc ),
+                                                                                                          key,
+                                                                                                          value,
+                                                                                                          self.breadCrumPath() ) )
 
                     cls = getattr( module, cls_name )
                     try:
                         setattr( self, key, cls( *args, **kwargs ) )
 
                     except Exception:
-                        self._error( "object instanciation ERROR: key {} = {} in {}".format( key, value, self.breadCrumPath() ) )
+                        self._error( "object instantiation ERROR: key {} = {} in {}".format( key, value, self.breadCrumPath() ) )
 
                 else:
                     self._error( "primitive ERROR: key {} = {} in {}".format( key, value, self.breadCrumPath() ) )
