@@ -76,11 +76,8 @@ class DatabaseConfig( ConfigProcessor,
 
     @database.setter
     def database( self, value: str ):
-        if os.path.isfile( value ) or os.path.isdir( os.path.split( value )[ 0 ] ):
-            self.__database = value
-            return
-
-        raise ValueError( "database doesn't contain a valid path" )
+        self.__database = value
+        return
 
     def getConnectString( self, library = 'sqlalchemy' ):
         """Returns a connect string to connect to the database.
