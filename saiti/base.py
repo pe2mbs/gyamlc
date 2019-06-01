@@ -19,12 +19,11 @@
 #
 import sys
 import inspect
+import logging
 
 class ConfigItemLoader( object ):
     def __init__( self ):
         return
-
-
 
 
 
@@ -196,40 +195,44 @@ class ConfigProcessor( object ):
                         var = value
 
                 elif type( value ) is str and ( callable( var ) or isinstance( var, object ) ):
-                    value = value.replace( ':', '.' )
-                    module_name, cls_name = value.rsplit( '.', 1 )
-                    try:
-                        module = __import__( module_name, None, None, [ cls_name ] )
+                    if value.startswith( 'ext://' ):    # case the class function shall handle the conversion
+                        var = value
 
-                    except ImportError:
-                        # support importing modules not yet set up by the parent module
-                        # (or package for that matter)
-                        self._error( "import ERROR: key {} = {} in {}".format( key, value, self.breadCrumPath() ) )
-                        continue
-
-                    args = []
-                    kwargs = {}
-                    if cls_name.endswith( ')' ):
-                        cls_name, cls_args = cls_name.split( '(', 1 )
-
-                        def fn( *args, **kwargs ):
-                            return args, kwargs
-
+                    else:
+                        value = value.replace( ':', '.' )
+                        module_name, cls_name = value.rsplit( '.', 1 )
                         try:
-                            args, kwargs = eval( 'fn( ' + cls_args[:-1] )
+                            module = __import__( module_name, None, None, [ cls_name ] )
 
-                        except Exception as exc:
-                            self._error( "object instantiation exception {} on key {} = {} in {}".format( str( exc ),
-                                                                                                          key,
-                                                                                                          value,
-                                                                                                          self.breadCrumPath() ) )
+                        except ImportError:
+                            # support importing modules not yet set up by the parent module
+                            # (or package for that matter)
+                            self._error( "import ERROR: key {} = {} in {}".format( key, value, self.breadCrumPath() ) )
+                            continue
 
-                    cls = getattr( module, cls_name )
-                    try:
-                        setattr( self, key, cls( *args, **kwargs ) )
+                        args = []
+                        kwargs = {}
+                        if cls_name.endswith( ')' ):
+                            cls_name, cls_args = cls_name.split( '(', 1 )
 
-                    except Exception:
-                        self._error( "object instantiation ERROR: key {} = {} in {}".format( key, value, self.breadCrumPath() ) )
+                            def fn( *args, **kwargs ):
+                                return args, kwargs
+
+                            try:
+                                args, kwargs = eval( 'fn( ' + cls_args )
+
+                            except Exception as exc:
+                                self._error( "object instantiation exception {} on key {} = {} in {}".format( str( exc ),
+                                                                                                              key,
+                                                                                                              value,
+                                                                                                              self.breadCrumPath() ) )
+
+                        cls = getattr( module, cls_name )
+                        try:
+                            setattr( self, key, cls( *args, **kwargs ) )
+
+                        except Exception:
+                            self._error( "object instantiation ERROR: key {} = {} in {}".format( key, value, self.breadCrumPath() ) )
 
                 else:
                     self._error( "primitive ERROR: key {} = {} in {}".format( key, value, self.breadCrumPath() ) )
@@ -293,37 +296,54 @@ class ConfigProcessor( object ):
 
         return config
 
-    def _dump( self, key, value, indent: int, stream: object ):
+    def _dump_element( self, key, value, indent: int, printer ):
         indentStr = " " * indent
         if isinstance( value, ( int, str, float, bool, list, tuple ) ):
-            print( "{0}{1:30} : {2}".format( indentStr, key, value ), file = stream )
+            printer( "{0}{1:30} : {2}".format( indentStr, key, value ) )
 
         elif isinstance( value, ConfigProcessor ):
-            print( "{0}{1:30} {{".format( indentStr, key ), file = stream )
-            value.dump( indent = indent + 2, stream = stream )
-            print( "{0}}}".format( indentStr ) )
+            printer( "{0}{1:30} {{".format( indentStr, key ) )
+            value._dump( indent + 2, printer )
+            printer( "{0}}}".format( indentStr ) )
 
         elif value is not None:
             if value in ( list, tuple ) and len( value ) > 0:
-                print( "{0}{1:30} : list >> {2}".format( indentStr, key, value ), file = stream )
+                printer( "{0}{1:30} : list >> {2}".format( indentStr, key, value ) )
 
             elif value is dict and len( value ) > 0:
-                print( "{0}{1:30} : dict >> {2}".format( indentStr, key, value ), file = stream )
+                printer( "{0}{1:30} : dict >> {2}".format( indentStr, key, value ) )
 
             else:
-                print( "{0}{1:30} : object >> {2}".format( indentStr, key, value ), file = stream )
+                printer( "{0}{1:30} : object >> {2}".format( indentStr, key, value ) )
 
         return
 
-    def dump( self, indent: int = 0, stream: object = sys.stdout ) -> None:
+    def _dump( self, indent: int = 0, printer = print ) -> None:
+        for key, value in self.props().items():
+            self._dump_element( key, value, indent, printer )
+
+        return
+
+    def dump( self, stream: object = sys.stdout ) -> None:
         """Dump properties of the class to the console or file stream supplied.
 
         :param indent:  int:    Number spaces to indent
         :param stream:  file:   File stream (default stdout)
         :return:
         """
+        def printer( data ):
+            print( data, file = stream )
+            return
 
-        for key, value in self.props().items():
-            self._dump( key, value, indent, stream )
+        self._dump( self, 0, printer )
+        return
 
+    def dump2log( self, logger = 'root', level = logging.DEBUG ):
+        log = logging.getLogger( logger )
+
+        def printer( data ):
+            log.log( level, data )
+            return
+
+        self._dump( self, 0, printer )
         return

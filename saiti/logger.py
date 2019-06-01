@@ -127,7 +127,10 @@ class LoggingStreamHandlerConfig( LoggingNullHandlerConfig ):
     @stream.setter
     def stream( self, value ):
         if type( value ) is str:
-            if value.startswith( 'sys.' ):
+            if value.startswith( 'ext://' ):
+                self.__stream = value
+
+            elif value.startswith( 'sys.' ):
                 self.__stream = getattr( sys, value.rsplit( '.', 1 )[ -1 ] )
 
             else:
@@ -165,11 +168,19 @@ class LoggingFileHandlerConfig( LoggingNullHandlerConfig ):
 
     @filename.setter
     def filename( self, value: str ):
-        if os.path.isfile( value ):
+        if value.startswith( '~' ):
+            value = os.path.expanduser( value )
+
+        else:
+            value = os.path.abspath( value )
+
+        basepath, filename = os.path.split( value )
+        print( basepath, filename )
+        if os.path.isdir( basepath ):
             self.__filename = value
             return
 
-        raise ValueError( "" )
+        raise ValueError( "Path doesn't exists: {} {}".format( basepath, filename ) )
 
     @property
     def mode( self ) -> str:
@@ -859,8 +870,5 @@ class LoggingConfig( ConfigProcessor ):
             "loggers": self.__loggers.props(),
             "root": self.__root.props()
         }
-        import json
-        print( json.dumps( cfg, indent = 4 ) )
-
         logging.config.dictConfig( cfg )
         return
