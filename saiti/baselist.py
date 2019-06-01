@@ -81,7 +81,7 @@ class ConfigProcessorList( ConfigProcessor ):
 
         return pr
 
-    def dump( self, indent: int = 0, stream: object = sys.stdout ) -> None:
+    def _dump( self, indent: int = 0, printer = print ) -> None:
         """Dump properties of the class to the console or file stream supplied.
 
         :param indent:  int:    Number spaces to indent
@@ -89,8 +89,8 @@ class ConfigProcessorList( ConfigProcessor ):
         :return:
         """
         for attr in self.__list:
-            print( "{0}{1:30} :".format( " " * indent, attr.name() ) )
-            attr.dump( indent + 2, stream )
+            printer( "{0}{1:30} :".format( " " * indent, attr.name() ) )
+            attr._dump( indent + 2, printer )
 
         return
 

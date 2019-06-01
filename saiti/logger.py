@@ -175,7 +175,6 @@ class LoggingFileHandlerConfig( LoggingNullHandlerConfig ):
             value = os.path.abspath( value )
 
         basepath, filename = os.path.split( value )
-        print( basepath, filename )
         if os.path.isdir( basepath ):
             self.__filename = value
             return
